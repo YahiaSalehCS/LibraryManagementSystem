@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="BookID" />
+    </Key>
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AvailabilityStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PublishedYear" Type="Int32" />
+    <NavigationProperty Name="BorrowingTransactions" Relationship="Self.FK_BookID" FromRole="Books" ToRole="BorrowingTransactions" />
+  </EntityType>
+  <EntityType Name="BorrowingTransaction">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+    </Key>
+    <Property Name="TransactionID" Type="Int32" Nullable="false" />
+    <Property Name="MemberID" Type="Int32" Nullable="false" />
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <Property Name="BorrowedDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ReturnedDate" Type="DateTime" Precision="0" />
+    <Property Name="LateFee" Type="Decimal" Precision="10" Scale="2" />
+    <NavigationProperty Name="Book" Relationship="Self.FK_BookID" FromRole="BorrowingTransactions" ToRole="Books" />
+    <NavigationProperty Name="Member" Relationship="Self.FK_MemberID" FromRole="BorrowingTransactions" ToRole="Members" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="MemberID" />
+    </Key>
+    <Property Name="MemberID" Type="Int32" Nullable="false" />
+    <Property Name="FullName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MembershipDate" Type="Int32" />
+    <Property Name="ContactInfo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="BorrowingTransactions" Relationship="Self.FK_MemberID" FromRole="Members" ToRole="BorrowingTransactions" />
+  </EntityType>
+  <Association Name="FK_BookID">
+    <End Role="Books" Type="Self.Book" Multiplicity="1" />
+    <End Role="BorrowingTransactions" Type="Self.BorrowingTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="BorrowingTransactions">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberID">
+    <End Role="Members" Type="Self.Member" Multiplicity="1" />
+    <End Role="BorrowingTransactions" Type="Self.BorrowingTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="MemberID" />
+      </Principal>
+      <Dependent Role="BorrowingTransactions">
+        <PropertyRef Name="MemberID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="LMSEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Books" EntityType="Self.Book" />
+    <EntitySet Name="BorrowingTransactions" EntityType="Self.BorrowingTransaction" />
+    <EntitySet Name="Members" EntityType="Self.Member" />
+    <AssociationSet Name="FK_BookID" Association="Self.FK_BookID">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="BorrowingTransactions" EntitySet="BorrowingTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberID" Association="Self.FK_MemberID">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="BorrowingTransactions" EntitySet="BorrowingTransactions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
