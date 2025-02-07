@@ -5,6 +5,12 @@ The "BookHaven Library Management System" is a desktop application built using *
 
 ---
 
+## Demo Video
+Watch the full demonstration of the **BookHaven Library Management System** on YouTube:  
+[![Watch the Demo](https://img.youtube.com/vi/pq6-j6C2THM/0.jpg)](https://youtu.be/pq6-j6C2THM)
+
+---
+
 ## Project Components
 
 ### 1. Main Form
